@@ -1,24 +1,32 @@
-<div>
-	<table class="table">
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
 		<tr>
-			<th>Name</th>
-			<th>Number</th>
-			<th>Goal</th>
-			<th>Inc/Dec</th>
-			<th>Remove</th>
+			<th><center>Name</center></th>
+			<th><center>Number</center></th>
+			<th><center>Goal</center></th>
+			<th><center>Inc/Dec</center></th>
+			<th><center>Remove</center></th>
 		</tr>
-		<tr ng-repeat='task in tasks'>
+		<tr ng-repeat='task in tasks' class='{{task.success}}'>
 			<td><center>{{task.name}}</center></td>
 			<td><center>{{task.number}}</center></td>
 			<td><center>{{task.goal}}</center></td>
-			<td><button ng-click='incrementCounter(task.name)'> + </button>
-			<button ng-click='decrementCounter(task.name)'> - </button></td>
-			<td><a href="" ng-click='removeTask(task.name)'> X </a></td>
+			<td><center><button ng-click='incrementCounter(task.name)' class="btn btn-success"> + </button>
+			<button ng-click='decrementCounter(task.name)' class="btn btn-danger"> - </button></center></td>
+			<td><center><a href="" ng-click='removeTask(task.name)' class="btn btn-primary"> X </a></center></td>
 		</tr>
 	</table>
-	<form ng-submit='addTask()'>
-		<input type='text' ng-model='newName'>
-		<input type='text' ng-model='newGoal'>
-		<input type='submit' value='add'>
-	</form>
+	<center>
+		<form class="form-inline" ng-submit='addTask()'>
+		    <div class="form-group">
+			    <label for="newName">Name</label>
+			    <input type="text" class="form-control" id="newName" placeholder="Beasting..." ng-model='newName'>
+		    </div>
+		    <div class="form-group">
+			    <label for="newGoal">Goal</label>
+			    <input type="text" class="form-control" id="newGoal" placeholder="300..." ng-model='newGoal'>
+		    </div>
+		    <button type="submit" class="btn btn-default">Add task</button>
+		</form>
+	</center>
 </div>

@@ -15,7 +15,11 @@ habyteApp.factory('userTasks',['$http',function(http){
 	var factory = {};
 
 	factory.getTasks = function(callback){
-		http.get('userTasks.json').success(callback);
+		http({
+			method:'GET',
+			url:'userTasks.json',
+			cache:true
+		}).success(callback);
 	};
 
 	return factory;
@@ -66,16 +70,29 @@ habyteApp.controller('dayCtrl',['$scope','userTasks',function(scope,ut){
 		var i = scope.tasks.indexOf(task);
 
 		scope.tasks[i].number += 1;
+
+		if(scope.tasks[i].number >= scope.tasks[i].goal){
+			scope.tasks[i].success = 'success';
+		}else{
+			scope.tasks[i].success = '';
+		}
 	}
 
 	scope.decrementCounter = function(name){
+
 		var task = scope.tasks.filter(function(entry){
 			return entry.name === name;
 		})[0];
 
 		var i = scope.tasks.indexOf(task);
-
-		scope.tasks[i].number -= 1;
+		if(scope.tasks[i].number > 0){
+			scope.tasks[i].number -= 1;
+		}
+		if(scope.tasks[i].number >= scope.tasks[i].goal){
+			scope.tasks[i].success = 'success';
+		}else{
+			scope.tasks[i].success = '';
+		}
 	}
 
 }]);
