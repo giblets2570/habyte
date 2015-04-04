@@ -11,33 +11,51 @@ habyteApp.config(['$routeProvider',function(route){
 		});
 }]);
 
-habyteApp.controller('dayCtrl',['$scope',function(scope){
-	scope.tasks = [{
-		name: 'Run',
-		number: 0,
-		goal: 5
-	},{
-		name: 'Read',
-		number: 0,
-		goal: 3
-	},{
-		name: 'Exercise',
-		number: 0,
-		goal: 4
-	}];
+habyteApp.factory('userTasks',function(){
+	var factory = {};
 
+	factory.getTasks = function(){
+		return[{
+			name: 'Run',
+			number: 0,
+			goal: 5
+		},{
+			name: 'Read',
+			number: 0,
+			goal: 3
+		},{
+			name: 'Exercise',
+			number: 0,
+			goal: 4
+		}];
+	};
+
+	return factory;
+});
+
+habyteApp.controller('dayCtrl',['$scope','userTasks',function(scope,ut){
+
+	scope.tasks = ut.getTasks();
 
 	scope.addTask = function(){
-		var newTask = {
-			name:scope.newName,
-			number:0,
-			goal:scope.newGoal
-		};
+		if (!scope.newName){
+			alert("Name field empty.");
+		}
+		else if(isNaN(scope.newGoal)){
+			alert("Goal not a number.")
+		}
+		else{
+			var newTask = {
+				name:scope.newName,
+				number:0,
+				goal:scope.newGoal
+			};
 
-		scope.tasks.push(newTask);
+			scope.tasks.push(newTask);
 
-		scope.newGoal='';
-		scope.newName='';
+			scope.newGoal='';
+			scope.newName='';
+		}
 	};
 
 	scope.removeTask = function(name){
