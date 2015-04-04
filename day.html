@@ -1,0 +1,10 @@
+<div>
+	<ul ng-repeat='task in tasks'>
+		Name: {{task.name}}, Number: {{task.number}}, Goals: {{task.goal}} <a href="" ng-click='removeTask(task.name)'>remove</a>
+	</ul>
+	<form ng-submit='addTask()'>
+		<input type='text' ng-model='newName'>
+		<input type='text' ng-model='newGoal'>
+		<input type='submit' value='add'>
+	</form>
+</div>
