@@ -11,31 +11,21 @@ habyteApp.config(['$routeProvider',function(route){
 		});
 }]);
 
-habyteApp.factory('userTasks',function(){
+habyteApp.factory('userTasks',['$http',function(http){
 	var factory = {};
 
-	factory.getTasks = function(){
-		return[{
-			name: 'Run',
-			number: 0,
-			goal: 5
-		},{
-			name: 'Read',
-			number: 0,
-			goal: 3
-		},{
-			name: 'Exercise',
-			number: 0,
-			goal: 4
-		}];
+	factory.getTasks = function(callback){
+		http.get('userTasks.json').success(callback);
 	};
 
 	return factory;
-});
+}]);
 
 habyteApp.controller('dayCtrl',['$scope','userTasks',function(scope,ut){
 
-	scope.tasks = ut.getTasks();
+	ut.getTasks(function(data){
+		scope.tasks = data;
+	});
 
 	scope.addTask = function(){
 		if (!scope.newName){

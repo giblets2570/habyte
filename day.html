@@ -1,5 +1,5 @@
 <div>
-	<table>
+	<table class="table">
 		<tr>
 			<th>Name</th>
 			<th>Number</th>
@@ -7,20 +7,13 @@
 			<th>Inc/Dec</th>
 			<th>Remove</th>
 		</tr>
-		<tr>
-			<td>--------------</td>
-			<td>--------------</td>
-			<td>--------------</td>
-			<td>--------------</td>
-			<td>--------------</td>
-		</tr>
 		<tr ng-repeat='task in tasks'>
 			<td><center>{{task.name}}</center></td>
 			<td><center>{{task.number}}</center></td>
 			<td><center>{{task.goal}}</center></td>
 			<td><button ng-click='incrementCounter(task.name)'> + </button>
 			<button ng-click='decrementCounter(task.name)'> - </button></td>
-			<td><a href="" ng-click='removeTask(task.name)'>remove</a></td>
+			<td><a href="" ng-click='removeTask(task.name)'> X </a></td>
 		</tr>
 	</table>
 	<form ng-submit='addTask()'>
