@@ -1,4 +1,4 @@
-var habyteApp = angular.module('habyteApp',['ngRoute']);
+var habyteApp = angular.module('habyteApp',['ngRoute','ngStorage']);
 
 habyteApp.config(['$routeProvider',function(route){
 	route.
@@ -8,12 +8,14 @@ habyteApp.config(['$routeProvider',function(route){
 		}).
 		when('/login',{
 			templateUrl:'partials/login.html',
+			controller: 'authCtrl'
 		}).
 		when('/signup',{
 			templateUrl:'partials/signup.html',
+			controller: 'authCtrl'
 		}).
 		otherwise({
-			redirectTo: '/day'
+			redirectTo: '/:userUID/day'
 		});
 }]);
 
@@ -60,7 +62,35 @@ habyteApp.factory('userTasks',['$http',function(http){
 	return factory;
 }]);
 
-habyteApp.controller('dayCtrl',['$scope','userTasks',function(scope,ut){
+habyteApp.run(function ($rootScope, $location, $sessionStorage){
+	$rootScope.$on("$routeChangeStart", function (event, next, current) {
+        $rootScope.authenticated = false;
+        if ($sessionStorage.uid) {
+            $rootScope.authenticated = true;
+            $rootScope.uid = $sessionStorage.uid;
+            $rootScope.name = $sessionStorage.name;
+        } else {
+            var nextUrl = next.$$route.originalPath;
+            if (nextUrl == '/signup' || nextUrl == '/login') {
+
+            } else {
+                $location.path("/login");
+            }
+        }
+    });
+});
+
+habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location',function(scope,session,location){
+
+	scope.login = function(){
+		console.log("Helo");
+		session.uid = 1;
+		location.path(session.uid+'/day');
+	};
+
+}]);
+
+habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$location','userTasks',function(scope,route,session,location,ut){
 
 	ut.getTasks(function(data){
 		scope.tasks = data;
@@ -155,6 +185,11 @@ habyteApp.controller('dayCtrl',['$scope','userTasks',function(scope,ut){
 				console.log(data);
 			});
 		}
+	}
+
+	scope.logout = function(){
+		session.uid = null;
+		location.path('login');
 	}
 
 }]);
