@@ -2,9 +2,15 @@ var habyteApp = angular.module('habyteApp',['ngRoute']);
 
 habyteApp.config(['$routeProvider',function(route){
 	route.
-		when('/day',{
+		when('/:userUID/day',{
 			templateUrl:'partials/day.html',
 			controller: 'dayCtrl'
+		}).
+		when('/login',{
+			templateUrl:'partials/login.html',
+		}).
+		when('/signup',{
+			templateUrl:'partials/signup.html',
 		}).
 		otherwise({
 			redirectTo: '/day'
@@ -18,30 +24,26 @@ habyteApp.factory('userTasks',['$http',function(http){
 		http({
 			method:'GET',
 			url:'endpoints/getTasks.php',
-			cache:true
+			cache:false
 		}).success(callback);
 	};
 
-	factory.addTask = function(newTask,callback){
+	var post = function(data,url,callback){
 		http({
 			method:'POST',
-			data: {task:newTask},
-			url:'endpoints/addTask.php'
+			data: data,
+			url:url
 		}).success(function(data,status,headers){
 			tasks(callback);
 		});
 	};
 
+	factory.addTask = function(newTask,callback){
+		post({task:newTask},'endpoints/addTask.php',callback);
+	};
+
 	factory.removeTask = function(oldTaskIndex,callback){
-		http({
-			method:'POST',
-			data: {taskIndex:oldTaskIndex},
-			url:'endpoints/removeTask.php'
-		}).success(function(data,status,headers){
-			console.log(data);
-			
-			tasks(callback);
-		});
+		post({taskIndex:oldTaskIndex},'endpoints/removeTask.php',callback);
 	};
 
 	factory.getTasks = tasks;
