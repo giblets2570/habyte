@@ -1,3 +1,7 @@
+<div>
+	<h1>Habyte</h1>
+</div>
+
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<tr>
@@ -7,7 +11,7 @@
 			<th><center>Inc/Dec</center></th>
 			<th><center>Remove</center></th>
 		</tr>
-		<tr ng-repeat='task in tasks' class='{{task.success}}'>
+		<tr ng-repeat='task in tasks' class='{{achieved(task)}}'>
 			<td><center>{{task.name}}</center></td>
 			<td><center>{{task.number}}</center></td>
 			<td><center>{{task.goal}}</center></td>
