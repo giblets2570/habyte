@@ -83,7 +83,6 @@ habyteApp.run(function ($rootScope, $location, $sessionStorage){
 habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',function(scope,session,location,http){
 
 	scope.login = function(){
-		console.log("Yay");
 		http({
 			method: 'GET',
 			url: 'endpoints/login.php',
@@ -99,6 +98,22 @@ habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',
 			}
 		});
 	};
+
+	scope.signup = function(){
+		http({
+			method: 'POST',
+			url: 'endpoints/signup.php',
+			data: {username: scope.username, password: scope.password},
+		}).success(function(data){
+			console.log(data);
+			if(data.uid != -1){
+				session.uid = data.uid;
+				location.path(session.uid+'/day');
+			}else{
+				console.log("Username already exists!");
+			}
+		});
+	}
 
 }]);
 

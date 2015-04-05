@@ -2,8 +2,9 @@
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
 
-	$task = $request->task;
-
+	$username = $request->username;
+	$password = $request->password;
+	
 	$servername = "localhost";
 	$serverusername = "root";
 	$serverpassword = "";
@@ -13,63 +14,32 @@
 
     if ($mysqli->connect_errno) {
         printf("Connect failed: %s\n", $mysqli->connect_error);
-        echo '1';
         exit();
     }
 
-	$sql = "select * from Tasks";
+	$sql = "select * from Users where name='$username'";
 	$query = $mysqli->query($sql);
 
-	if( $query){
+	if($query){
 		// Sweet
 		$numrows = $query->num_rows;
-
 		if($numrows === 0){
-			$tasks = array();
-			$tasks[] = $task;
-			$json_task = json_encode($tasks);
-			$sql = "insert into Tasks(id,tasks) values (NULL,'$json_task')";
+			$sql = "insert into Users(id,name,password) values (NULL,'$username','$password')";
 			$query = $mysqli->query($sql);
-			if ($query){
-				//pass
-			}else{
-				echo '2';
-				exit();
-			}
-		}else{
 
-			$row = $query->fetch_assoc();
-			$id = $row['id'];
-			$json_tasks = $row['tasks'];
-			$tasks = json_decode($json_tasks);
-			$tasks[] = $task;
-			$json_tasks = json_encode($tasks);
-			$sql = "update Tasks set tasks='$json_tasks' where id='$id'";
-			$query = $mysqli->query($sql);
-			if ($query){
-				//pass
-			}else{
-				echo '3';
+			if($query){
+				$sql = "select * from Users where name='$username'";
+				$query = $mysqli->query($sql);
+				$row = $query->fetch_assoc();
+				$results = array();
+				$results['uid'] = $row['id'];
+				echo json_encode($results);
 				exit();
 			}
 		}
-	}else{
-		//echo "Error: " . $sql . "<br>" . $mysqli->error;
-		echo '4';
-		exit();
 	}
-
-	$sql = "select * from Tasks";
-	$query = $mysqli->query($sql);
-	if ($query){
-		$row = $query->fetch_assoc();
-		$id = $row['id'];
-		$result = array();
-		$result['headers'] = $id;
-		echo json_encode($result);
-	}else{
-		echo '5';
-		exit();	
-	}
-
+	$results = array();
+	$results['uid'] = -1;
+	echo json_encode($results);
+	exit();
 ?>
