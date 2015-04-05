@@ -25,7 +25,9 @@
 		$numrows = $query->num_rows;
 
 		if($numrows === 0){
-			$json_task = json_encode($task);
+			$tasks = array();
+			$tasks[] = $task;
+			$json_task = json_encode($tasks);
 			$sql = "insert into Tasks(id,tasks) values (NULL,'$json_task')";
 			$query = $mysqli->query($sql);
 			if ($query){

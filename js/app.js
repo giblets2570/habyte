@@ -34,6 +34,7 @@ habyteApp.factory('userTasks',['$http',function(http){
 			data: data,
 			url:url
 		}).success(function(data,status,headers){
+			console.log(data);
 			tasks(callback);
 		});
 	};
@@ -44,6 +45,14 @@ habyteApp.factory('userTasks',['$http',function(http){
 
 	factory.removeTask = function(oldTaskIndex,callback){
 		post({taskIndex:oldTaskIndex},'endpoints/removeTask.php',callback);
+	};
+
+	factory.increment = function(taskIndex,callback){
+		post({taskIndex:taskIndex},'endpoints/increment.php',callback);
+	};
+
+	factory.decrement = function(taskIndex,callback){
+		post({taskIndex:taskIndex},'endpoints/decrement.php',callback);
 	};
 
 	factory.getTasks = tasks;
@@ -115,6 +124,10 @@ habyteApp.controller('dayCtrl',['$scope','userTasks',function(scope,ut){
 
 		scope.tasks[i].number += 1;
 
+		ut.increment(i,function(data){
+			console.log(data);
+		});
+
 		if(scope.tasks[i].number >= scope.tasks[i].goal){
 			scope.tasks[i].success = 'success';
 		}else{
@@ -129,13 +142,18 @@ habyteApp.controller('dayCtrl',['$scope','userTasks',function(scope,ut){
 		})[0];
 
 		var i = scope.tasks.indexOf(task);
-		if(scope.tasks[i].number > 0){
-			scope.tasks[i].number -= 1;
-		}
-		if(scope.tasks[i].number >= scope.tasks[i].goal){
+		
+		if(scope.tasks[i].number-1 >= scope.tasks[i].goal){
 			scope.tasks[i].success = 'success';
 		}else{
 			scope.tasks[i].success = '';
+		}
+
+		if(scope.tasks[i].number > 0){
+			scope.tasks[i].number -= 1;
+			ut.decrement(i,function(data){
+				console.log(data);
+			});
 		}
 	}
 

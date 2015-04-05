@@ -26,11 +26,9 @@
 		$row = $query->fetch_assoc();
 		$id = $row['id'];
 		$json_tasks = $row['tasks'];
-		$tasks = json_decode($json_tasks);
-		echo($tasks[$taskIndex]);
-		$tasks[$taskIndex]['number'] = $tasks[$taskIndex]['number'] + 1;
+		$tasks = json_decode($json_tasks,true);
+		$tasks[$taskIndex]['number'] += 1;
 		$json_tasks = json_encode($tasks);
-		// echo("$json_tasks");
 		$sql = "update Tasks set tasks='$json_tasks' where id='$id'";
 		$query = $mysqli->query($sql);
 		if ($query){
