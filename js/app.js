@@ -22,39 +22,40 @@ habyteApp.config(['$routeProvider',function(route){
 habyteApp.factory('userTasks',['$http',function(http){
 	var factory = {};
 
-	var tasks = function(callback){
+	var tasks = function(userUID,callback){
 		http({
 			method:'GET',
+			params:{userUID: userUID},
 			url:'endpoints/getTasks.php',
 			cache:false
 		}).success(callback);
 	};
 
-	var post = function(data,url,callback){
+	var post = function(userUID,data,url,callback){
 		http({
 			method:'POST',
 			data: data,
 			url:url
 		}).success(function(data,status,headers){
 			console.log(data);
-			tasks(callback);
+			tasks(userUID,callback);
 		});
 	};
 
-	factory.addTask = function(newTask,callback){
-		post({task:newTask},'endpoints/addTask.php',callback);
+	factory.addTask = function(userUID,newTask,callback){
+		post(userUID,{userUID:userUID,task:newTask},'endpoints/addTask.php',callback);
 	};
 
-	factory.removeTask = function(oldTaskIndex,callback){
-		post({taskIndex:oldTaskIndex},'endpoints/removeTask.php',callback);
+	factory.removeTask = function(userUID,oldTaskIndex,callback){
+		post(userUID,{userUID:userUID,taskIndex:oldTaskIndex},'endpoints/removeTask.php',callback);
 	};
 
-	factory.increment = function(taskIndex,callback){
-		post({taskIndex:taskIndex},'endpoints/increment.php',callback);
+	factory.increment = function(userUID,taskIndex,callback){
+		post(userUID,{userUID:userUID,taskIndex:taskIndex},'endpoints/increment.php',callback);
 	};
 
-	factory.decrement = function(taskIndex,callback){
-		post({taskIndex:taskIndex},'endpoints/decrement.php',callback);
+	factory.decrement = function(userUID,taskIndex,callback){
+		post(userUID,{userUID:userUID,taskIndex:taskIndex},'endpoints/decrement.php',callback);
 	};
 
 	factory.getTasks = tasks;
@@ -94,7 +95,9 @@ habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',
 				session.uid = data.uid;
 				location.path(session.uid+'/day');
 			}else{
-				console.log("Wrong username/password");
+				alert("Wrong username/password");
+				scope.username = "";
+				scope.password = "";
 			}
 		});
 	};
@@ -110,7 +113,9 @@ habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',
 				session.uid = data.uid;
 				location.path(session.uid+'/day');
 			}else{
-				console.log("Username already exists!");
+				alert("Username already exists!");
+				scope.username = "";
+				scope.password = "";
 			}
 		});
 	}
@@ -127,7 +132,7 @@ habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$loca
 
 	scope.init();
 
-	ut.getTasks(function(data){
+	ut.getTasks(session.uid,function(data){
 		scope.tasks = data;
 	});
 
@@ -155,7 +160,7 @@ habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$loca
 				goal:Number(scope.newGoal)
 			};
 
-			ut.addTask(newTask,function(data){
+			ut.addTask(session.uid,newTask,function(data){
 				console.log(data);
 			});
 
@@ -173,7 +178,7 @@ habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$loca
 
 		var i = scope.tasks.indexOf(task);
 
-		ut.removeTask(i,function(data){
+		ut.removeTask(session.uid,i,function(data){
 			console.log(data);
 		});
 
@@ -189,7 +194,7 @@ habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$loca
 
 		scope.tasks[i].number += 1;
 
-		ut.increment(i,function(data){
+		ut.increment(session.uid,i,function(data){
 			console.log(data);
 		});
 
@@ -216,7 +221,7 @@ habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$loca
 
 		if(scope.tasks[i].number > 0){
 			scope.tasks[i].number -= 1;
-			ut.decrement(i,function(data){
+			ut.decrement(session.uid,i,function(data){
 				console.log(data);
 			});
 		}

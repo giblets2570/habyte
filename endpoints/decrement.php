@@ -1,7 +1,7 @@
 <?php
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
-
+	$userID = $request->userUID;
 	$taskIndex = $request->taskIndex;
 
 	$servername = "localhost";
@@ -17,7 +17,7 @@
         exit();
     }
 
-	$sql = "select * from Tasks";
+	$sql = "select * from Tasks where userID='$userID'";
 	$query = $mysqli->query($sql);
 
 	if($query){

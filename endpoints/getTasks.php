@@ -1,4 +1,7 @@
 <?php
+
+	$userID = $_GET['userUID'];
+
 	$servername = "localhost";
 	$serverusername = "root";
 	$serverpassword = "";
@@ -11,7 +14,7 @@
         echo '[]';
         exit();
     }
-	$sql = "select * from Tasks";
+	$sql = "select * from Tasks where userID='$userID'";
 	$query = $mysqli->query($sql);
 
 	if($query){
