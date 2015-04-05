@@ -15,7 +15,7 @@ habyteApp.config(['$routeProvider',function(route){
 			controller: 'authCtrl'
 		}).
 		otherwise({
-			redirectTo: '/:userUID/day'
+			redirectTo: '/login'
 		});
 }]);
 
