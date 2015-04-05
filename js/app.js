@@ -80,17 +80,37 @@ habyteApp.run(function ($rootScope, $location, $sessionStorage){
     });
 });
 
-habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location',function(scope,session,location){
+habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',function(scope,session,location,http){
 
 	scope.login = function(){
-		console.log("Helo");
-		session.uid = 1;
-		location.path(session.uid+'/day');
+		console.log("Yay");
+		http({
+			method: 'GET',
+			url: 'endpoints/login.php',
+			params: {username: scope.username, password: scope.password},
+			cache: false
+		}).success(function(data){
+			console.log(data);
+			if(data.uid != -1){
+				session.uid = data.uid;
+				location.path(session.uid+'/day');
+			}else{
+				console.log("Wrong username/password");
+			}
+		});
 	};
 
 }]);
 
-habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$location','userTasks',function(scope,route,session,location,ut){
+habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$location','userTasks',function(scope,routeParams,session,location,ut){
+
+	scope.init = function(){
+		if(routeParams.userUID != session.uid){
+			location.path(session.uid + "/day");
+		}
+	}
+
+	scope.init();
 
 	ut.getTasks(function(data){
 		scope.tasks = data;
