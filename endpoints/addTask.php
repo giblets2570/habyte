@@ -10,10 +10,11 @@
 
     if ($mysqli->connect_errno) {
         printf("Connect failed: %s\n", $mysqli->connect_error);
-        echo '1';
+        $result['success'] = 0;
+		echo json_encode($result);
         exit();
     }
-
+    $date = date("Y-m-d");
 	$sql = "select * from Tasks where userID='$userID'";
 	$query = $mysqli->query($sql);
 
@@ -22,15 +23,48 @@
 		$numrows = $query->num_rows;
 
 		if($numrows === 0){
+			//add task into task table
 			$tasks = array();
 			$tasks[] = $task;
 			$json_task = json_encode($tasks);
-			$sql = "insert into Tasks(id,userID,tasks) values (NULL,'$userID','$json_task')";
+			$sql = "insert into Tasks(id,userID,tasks,date) values (NULL,'$userID','$json_task','$date')";
 			$query = $mysqli->query($sql);
+
 			if ($query){
 				//pass
+
 			}else{
-				echo '2';
+				$result['success'] = -1;
+				echo json_encode($result);
+				exit();
+			}
+
+			//add task in task timeline table
+			$sql = "select * from Tasks where userID='$userID'";
+			$query = $mysqli->query($sql);
+			if($query){
+				$row = $query->fetch_assoc();
+
+				$taskID = $row['id'];
+				$taskName =$task['name'];
+				$timeline = json_encode(array());
+				$sql = "insert into TaskLimeline(id,taskID,taskName,timeline,startDate,endDate) values (NULL,'$taskID','$taskName','$timeline','$date',NULL)";
+				$query = $mysqli->query($sql);
+
+				if($query){
+					$result['success'] = 3;
+					echo json_encode($result);
+					exit();
+				}else{
+					echo $mysqli->error;
+					$result['success'] = -3;
+					echo json_encode($result);
+					exit();
+				}
+
+			}else{
+				$result['success'] = -2;
+				echo json_encode($result);
 				exit();
 			}
 		}else{
@@ -45,8 +79,32 @@
 			$query = $mysqli->query($sql);
 			if ($query){
 				//pass
+
+				//add task in task timeline table
+
+				$taskID = $id;
+				$task = json_decode(json_encode($task),true);
+				$taskName =$task['name'];
+
+				$sql = "insert into TaskTimeline(id,taskID,taskName,timeline,startDate,endDate) values(NULL,'$taskID','$taskName','[]','$date',NULL)";
+				$query = $mysqli->query($sql);
+
+				if($query){
+					$result['success'] = 3;
+					echo json_encode($result);
+					exit();
+				}else{
+					echo $mysqli->error;
+					$result['success'] = -3;
+					echo json_encode($result);
+					exit();
+				}
+
+			
+
 			}else{
-				echo '3';
+				$result['success'] = -1;
+				echo json_encode($result);
 				exit();
 			}
 		}
@@ -55,18 +113,10 @@
 		echo '4';
 		exit();
 	}
-
-	$sql = "select * from Tasks where userID='$userID'";
-	$query = $mysqli->query($sql);
-	if ($query){
-		$row = $query->fetch_assoc();
-		$id = $row['id'];
-		$result = array();
-		$result['headers'] = $id;
-		echo json_encode($result);
-	}else{
-		echo '5';
-		exit();	
-	}
-
+	
+	$result = array();
+	$result['success'] = 1;
+	echo json_encode($result);
+	
 ?>
+

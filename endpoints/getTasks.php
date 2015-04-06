@@ -1,9 +1,8 @@
 <?php
 
 	$userID = $_GET['userUID'];
-
 	include 'db.php';
-
+	
 	$mysqli = new mysqli($servername, $serverusername, $serverpassword, $db);
 
     if ($mysqli->connect_errno) {

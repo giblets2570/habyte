@@ -88,7 +88,7 @@ habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',
 			method: 'GET',
 			url: 'endpoints/login.php',
 			params: {username: scope.username, password: scope.password},
-			cache: false
+			cache: true
 		}).success(function(data){
 			console.log(data);
 			if(data.uid != -1){
