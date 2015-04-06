@@ -133,6 +133,7 @@ habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$loca
 	scope.init();
 
 	ut.getTasks(session.uid,function(data){
+		console.log(data);
 		scope.tasks = data;
 	});
 

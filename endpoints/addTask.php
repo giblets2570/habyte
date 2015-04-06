@@ -46,9 +46,10 @@
 				$row = $query->fetch_assoc();
 
 				$taskID = $row['id'];
+				$task = json_decode(json_encode($task),true);
 				$taskName =$task['name'];
 				$timeline = json_encode(array());
-				$sql = "insert into TaskLimeline(id,taskID,taskName,timeline,startDate,endDate) values (NULL,'$taskID','$taskName','$timeline','$date',NULL)";
+				$sql = "insert into TaskTimeline(id,taskID,taskName,timeline,startDate,endDate) values (NULL,'$taskID','$taskName','$timeline','$date',NULL)";
 				$query = $mysqli->query($sql);
 
 				if($query){
