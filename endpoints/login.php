@@ -2,10 +2,7 @@
 	$username = $_GET['username'];
 	$password = $_GET['password'];
 	
-	$servername = "localhost";
-	$serverusername = "root";
-	$serverpassword = "";
-	$db = "habyte";
+	include 'db.php';
 
 	$mysqli = new mysqli($servername, $serverusername, $serverpassword, $db);
 

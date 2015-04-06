@@ -5,10 +5,7 @@
 	$username = $request->username;
 	$password = $request->password;
 	
-	$servername = "localhost";
-	$serverusername = "root";
-	$serverpassword = "";
-	$db = "habyte";
+	include 'db.php';
 
 	$mysqli = new mysqli($servername, $serverusername, $serverpassword, $db);
 
