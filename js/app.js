@@ -6,6 +6,10 @@ habyteApp.config(['$routeProvider',function(route){
 			templateUrl:'partials/day.html',
 			controller: 'dayCtrl'
 		}).
+		when('/:userUID/timeline',{
+			templateUrl:'partials/timeline.html',
+			controller: 'timelineCtrl'
+		}).
 		when('/login',{
 			templateUrl:'partials/login.html',
 			controller: 'authCtrl'
@@ -57,6 +61,15 @@ habyteApp.factory('userTasks',['$http',function(http){
 	factory.decrement = function(userUID,taskIndex,callback){
 		post(userUID,{userUID:userUID,taskIndex:taskIndex},'endpoints/decrement.php',callback);
 	};
+
+	factory.timeline = function(userUID,callback){
+		http({
+			method:'GET',
+			params:{userUID: userUID},
+			url:'endpoints/getTaskTimeline.php',
+			cache:true
+		}).success(callback);
+	}
 
 	factory.getTasks = tasks;
 
@@ -119,6 +132,26 @@ habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',
 			}
 		});
 	}
+
+}]);
+
+habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','$location','userTasks',function(scope,routeParams,session,location,ut){
+	scope.init = function(){
+		if(routeParams.userUID != session.uid){
+			location.path(session.uid + "/timeline");
+		}
+	}
+	scope.init();
+
+	scope.logout = function(){
+		session.uid = null;
+		location.path('login');
+	}
+
+	ut.timeline(session.uid,function(data){
+		console.log(data);
+		scope.timelines = data;
+	});
 
 }]);
 

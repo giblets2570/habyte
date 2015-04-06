@@ -1,0 +1,14 @@
+<div>
+	<h1>Habyte</h1>
+	<button ng-click='logout()' class="btn btn-danger" style='float:right; margin-bottom:10px'>Logout</button>
+	<a class="btn" href="#/0/day" style='float:right; margin-bottom:10px'>Day</a>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-bordered">
+		<th>Task name</th><th>Timeline</th>
+		<tr ng-repeat='timeline in timelines'>
+			<td> {{timeline.taskName}} </td><td>{{ timeline.timeline }}</td>
+		</tr>
+	</table>
+</div>
