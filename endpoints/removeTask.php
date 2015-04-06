@@ -19,11 +19,13 @@
 
 	if($query){
 		// Sweet
-		
+		$date = date("Y-m-d");
+
 		$row = $query->fetch_assoc();
 		$id = $row['id'];
 		$json_tasks = $row['tasks'];
-		$tasks = json_decode($json_tasks);
+		$tasks = json_decode($json_tasks,true);
+		$taskName =$tasks[$taskIndex]['name'];
 		unset($tasks[$taskIndex]);
 		$tasks = array_values($tasks);
 		$json_tasks = json_encode($tasks);
@@ -31,28 +33,63 @@
 		$query = $mysqli->query($sql);
 		if ($query){
 			//pass
+
 		}else{
 			echo '3';
 			exit();
 		}
-	
+
+		$taskID = $id;
+
+		$sql = "select * from TaskTimeline where taskID='$taskID' and taskName='$taskName'";
+		$query = $mysqli->query($sql);
+
+		if($query){
+			if($query->num_rows < 1){
+				$result['success'] = -1;
+				echo json_encode($result);
+				exit();	
+			}
+			$row = $query->fetch_assoc();
+
+			$startDate = $row['startDate'];
+
+			if($startDate===$date){
+				$sql = "delete from TaskTimeline where taskID='$taskID' and taskName='$taskName'";
+			}else{
+				$sql = "update TaskTimeline set endDate='$date' where taskID='$taskID' and taskName='$taskName'";
+			}
+
+			$query = $mysqli->query($sql);
+
+			if($query){
+				
+			}else{
+				$result = array();
+				$result['success'] = -2;
+				echo json_encode($result);
+				exit();
+			}
+			
+		}else{
+			echo $mysqli->error;
+			$result = array();
+			$result['success'] = -3;
+			echo json_encode($result);
+			exit();
+		}
+
+
+
 	}else{
 		//echo "Error: " . $sql . "<br>" . $mysqli->error;
 		echo '4';
 		exit();
 	}
 
-	$sql = "select * from Tasks where userID='$userID'";
-	$query = $mysqli->query($sql);
-	if ($query){
-		$row = $query->fetch_assoc();
-		$id = $row['id'];
-		$result = array();
-		$result['headers'] = $id;
-		echo json_encode($result);
-	}else{
-		echo '5';
-		exit();	
-	}
+
+	$result = array();
+	$result['success'] = 1;
+	echo json_encode($result);
 
 ?>
