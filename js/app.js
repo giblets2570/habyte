@@ -137,7 +137,7 @@ habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',
 
 habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','$location','userTasks',function(scope,routeParams,session,location,ut){
 	scope.viewedTask = {};
-
+	scope.message = "";
 	scope.init = function(){
 		if(routeParams.userUID != session.uid){
 			location.path(session.uid + "/timeline");
@@ -164,24 +164,24 @@ habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','
       labels: [],
       datasets: [
         {
-          label: 'Task Timeline',
-          fillColor: 'rgba(220,220,220,0.2)',
-          strokeColor: 'rgba(220,220,220,1)',
-          pointColor: 'rgba(220,220,220,1)',
-          pointStrokeColor: '#fff',
-          pointHighlightFill: '#fff',
-          pointHighlightStroke: 'rgba(220,220,220,1)',
-          data: []
+			label: 'Task Timeline',
+			fillColor: 'rgba(220,220,220,0.2)',
+			strokeColor: 'rgba(220,220,220,1)',
+			pointColor: 'rgba(220,220,220,1)',
+			pointStrokeColor: '#fff',
+			pointHighlightFill: '#fff',
+			pointHighlightStroke: 'rgba(220,220,220,1)',
+			data: []
         },
         {
-          label: 'Goal',
-          fillColor: 'rgba(110,220,110,0.2)',
-          strokeColor: 'rgba(110,220,110,1)',
-          pointColor: 'rgba(110,220,110,1)',
-          pointStrokeColor: '#fff',
-          pointHighlightFill: '#fff',
-          pointHighlightStroke: 'rgba(220,220,220,1)',
-          data: []
+			label: 'Goal',
+			fillColor: 'rgba(110,220,110,0.2)',
+			strokeColor: 'rgba(110,220,110,1)',
+			pointColor: 'rgba(110,220,110,1)',
+			pointStrokeColor: '#fff',
+			pointHighlightFill: '#fff',
+			pointHighlightStroke: 'rgba(220,220,220,1)',
+			data: []
         }
       ]
     };
@@ -254,6 +254,11 @@ habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','
 		scope.myData.labels = label;
 		scope.myData.datasets[0].data = jsonTask.timeline;
 		scope.myData.datasets[1].data = goal;
+		if(jsonTask.timeline.length == 0){
+			scope.message = "Not enough data to display graph.";
+		}else{
+			scope.message = "";
+		}
 	}
 
 	scope.logout = function(){
@@ -381,6 +386,6 @@ habyteApp.directive('timelineDir',function(){
 		scope:{
 			taskName: '@'
 		},
-		template: 'Task name: {{taskName}}',
+		template: '{{taskName}}',
 	}
 });
