@@ -4,12 +4,13 @@
 	<a class="btn" href="#/0/day" style='float:right; margin-bottom:10px'>Day</a>
 
 
-	<select data-native-menu="false" data-role="listview" ng-model='selectedTask' ng-change='update()'>
+	<select class="selectpicker" ng-model='selectedTask' ng-change='update()'>
 	    <option ng-repeat="timeline in timelines" value="{{timeline}}">{{timeline.taskName}}</option>
 	</select>
 
 	<div timeline-dir task-name='{{viewedTask}}'>
-
 	</div>
 
+	<canvas tc-chartjs-line chart-data="myData" chart-options="myOptions" width="" height=""></canvas>
 </div>
+

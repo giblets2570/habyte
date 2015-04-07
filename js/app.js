@@ -1,4 +1,4 @@
-var habyteApp = angular.module('habyteApp',['ngRoute','ngStorage']);
+var habyteApp = angular.module('habyteApp',['ngRoute','ngStorage','tc.chartjs']);
 
 habyteApp.config(['$routeProvider',function(route){
 	route.
@@ -155,19 +155,96 @@ habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','
 			}catch(err){
 				json = [];
 			}
-
-			var data = [];
-			for (j in json){
-				data.push(json[j]);
-			}
-			scope.timelines[index]['timeline'] = data;
+			scope.timelines[index]['timeline'] = json;
 		}
 	});
+
+	// Chart.js Data
+    scope.myData = {
+      labels: [],
+      datasets: [
+        {
+          label: 'My First dataset',
+          fillColor: 'rgba(220,220,220,0.2)',
+          strokeColor: 'rgba(220,220,220,1)',
+          pointColor: 'rgba(220,220,220,1)',
+          pointStrokeColor: '#fff',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: []
+        }
+      ]
+    };
+
+    // Chart.js Options
+    scope.myOptions =  {
+
+      // Sets the chart to be responsive
+      responsive: true,
+
+      ///Boolean - Whether grid lines are shown across the chart
+      scaleShowGridLines : true,
+
+      //String - Colour of the grid lines
+      scaleGridLineColor : "rgba(0,0,0,.05)",
+
+      //Number - Width of the grid lines
+      scaleGridLineWidth : 1,
+
+      //Boolean - Whether the line is curved between points
+      bezierCurve : true,
+
+      //Number - Tension of the bezier curve between points
+      bezierCurveTension : 0.4,
+
+      //Boolean - Whether to show a dot for each point
+      pointDot : true,
+
+      //Number - Radius of each point dot in pixels
+      pointDotRadius : 4,
+
+      //Number - Pixel width of point dot stroke
+      pointDotStrokeWidth : 1,
+
+      //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+      pointHitDetectionRadius : 20,
+
+      //Boolean - Whether to show a stroke for datasets
+      datasetStroke : true,
+
+      //Number - Pixel width of dataset stroke
+      datasetStrokeWidth : 2,
+
+      //Boolean - Whether to fill the dataset with a colour
+      datasetFill : true,
+
+      // Function - on animation progress
+      onAnimationProgress: function(){},
+
+      // Function - on animation complete
+      onAnimationComplete: function(){},
+
+      //String - A legend template
+      legendTemplate : '&lt;ul class="tc-chart-js-legend"&gt;&lt;% for (var i=0; i&lt;datasets.length; i++){%&gt;&lt;li&gt;&lt;span style="background-color:&lt;%=datasets[i].strokeColor%&gt;"&gt;&lt;/span&gt;&lt;%if(datasets[i].label){%&gt;&lt;%=datasets[i].label%&gt;&lt;%}%&gt;&lt;/li&gt;&lt;%}%&gt;&lt;/ul&gt;'
+    };
+
+	scope.myOptions =  {
+	  // Chart.js options can go here.
+	};
 
 	scope.update = function(){
 		console.log(scope.viewedTask);
 		scope.viewedTask = scope.selectedTask;
-		console.log(scope.viewedTask);
+		console.log(JSON.parse(scope.viewedTask));
+		var jsonTask = JSON.parse(scope.viewedTask);
+		var noDays = jsonTask.timeline.length;
+		var label = [];
+		for(i = 0; i < noDays; i++){
+			label.push(i);
+		}
+		console.log(label)
+		scope.myData.labels = label;
+		scope.myData.datasets[0].data = jsonTask.timeline;
 	}
 
 	scope.logout = function(){
