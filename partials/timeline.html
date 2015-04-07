@@ -4,11 +4,10 @@
 	<a class="btn" href="#/0/day" style='float:right; margin-bottom:10px'>Day</a>
 </div>
 
-<div class="table-responsive">
-	<table class="table table-bordered">
-		<th>Task name</th><th>Timeline</th>
-		<tr ng-repeat='timeline in timelines'>
-			<td> {{timeline.taskName}} </td><td>{{ timeline.timeline }}</td>
-		</tr>
-	</table>
+<select data-native-menu="false" data-role="listview" ng-model='selectedTask' ng-change='update()'>
+    <option ng-repeat="timeline in timelines" value="{{timeline.timeline}}">{{timeline.taskName}}</option>
+</select>
+
+<div style='width:100%; height:100%'>
+    
 </div>

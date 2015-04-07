@@ -67,7 +67,7 @@ habyteApp.factory('userTasks',['$http',function(http){
 			method:'GET',
 			params:{userUID: userUID},
 			url:'endpoints/getTaskTimeline.php',
-			cache:true
+			cache:false
 		}).success(callback);
 	}
 
@@ -140,18 +140,36 @@ habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','
 		if(routeParams.userUID != session.uid){
 			location.path(session.uid + "/timeline");
 		}
+		scope.viewTask=[];
 	}
+	
 	scope.init();
+
+
+	ut.timeline(session.uid,function(data){
+		scope.timelines = data;
+		for(index in data){
+			var json = JSON.parse(data[index].timeline);
+			var data = [];
+			for (j in json){
+				data.push(json[j]);
+			}
+			console.log(data);
+			scope.timelines[index]['timeline'] = data;
+			scope.data = data;
+		}
+	});
+
+	scope.update = function(){
+		scope.viewTask = scope.selectedTask;
+		console.log(scope.viewTask);
+		scope.$apply;
+	}
 
 	scope.logout = function(){
 		session.uid = null;
 		location.path('login');
 	}
-
-	ut.timeline(session.uid,function(data){
-		console.log(data);
-		scope.timelines = data;
-	});
 
 }]);
 
