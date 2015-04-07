@@ -2,15 +2,15 @@
 	<h1>Habyte</h1>
 	<button ng-click='logout()' class="btn btn-danger" style='float:right; margin-bottom:10px'>Logout</button>
 	<a class="btn" href="#/0/day" style='float:right; margin-bottom:10px'>Day</a>
-
-
-	<select class="selectpicker" ng-model='selectedTask' ng-change='update()'>
+</div>
+<div>
+	Choose your task timeline: <select class="selectpicker" ng-model='selectedTask' ng-change='update()'>
 	    <option ng-repeat="timeline in timelines" value="{{timeline}}">{{timeline.taskName}}</option>
 	</select>
 
 	<div timeline-dir task-name='{{viewedTask}}'>
 	</div>
-
-	<canvas tc-chartjs-line chart-data="myData" chart-options="myOptions" width="" height=""></canvas>
 </div>
-
+<div>
+	<canvas tc-chartjs-line chart-data="myData" chart-options="myOptions" width="" height="80"></canvas>
+</div>

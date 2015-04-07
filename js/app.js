@@ -164,10 +164,20 @@ habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','
       labels: [],
       datasets: [
         {
-          label: 'My First dataset',
+          label: 'Task Timeline',
           fillColor: 'rgba(220,220,220,0.2)',
           strokeColor: 'rgba(220,220,220,1)',
           pointColor: 'rgba(220,220,220,1)',
+          pointStrokeColor: '#fff',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: []
+        },
+        {
+          label: 'Goal',
+          fillColor: 'rgba(110,220,110,0.2)',
+          strokeColor: 'rgba(110,220,110,1)',
+          pointColor: 'rgba(110,220,110,1)',
           pointStrokeColor: '#fff',
           pointHighlightFill: '#fff',
           pointHighlightStroke: 'rgba(220,220,220,1)',
@@ -228,10 +238,6 @@ habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','
       legendTemplate : '&lt;ul class="tc-chart-js-legend"&gt;&lt;% for (var i=0; i&lt;datasets.length; i++){%&gt;&lt;li&gt;&lt;span style="background-color:&lt;%=datasets[i].strokeColor%&gt;"&gt;&lt;/span&gt;&lt;%if(datasets[i].label){%&gt;&lt;%=datasets[i].label%&gt;&lt;%}%&gt;&lt;/li&gt;&lt;%}%&gt;&lt;/ul&gt;'
     };
 
-	scope.myOptions =  {
-	  // Chart.js options can go here.
-	};
-
 	scope.update = function(){
 		console.log(scope.viewedTask);
 		scope.viewedTask = scope.selectedTask;
@@ -239,12 +245,15 @@ habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','
 		var jsonTask = JSON.parse(scope.viewedTask);
 		var noDays = jsonTask.timeline.length;
 		var label = [];
+		var goal = [];
 		for(i = 0; i < noDays; i++){
 			label.push(i);
+			goal.push(jsonTask.taskGoal);
 		}
 		console.log(label)
 		scope.myData.labels = label;
 		scope.myData.datasets[0].data = jsonTask.timeline;
+		scope.myData.datasets[1].data = goal;
 	}
 
 	scope.logout = function(){

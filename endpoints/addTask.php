@@ -48,12 +48,14 @@
 				$taskID = $row['id'];
 				$task = json_decode(json_encode($task),true);
 				$taskName =$task['name'];
+				$taskGoal = $task['goal'];
+				echo $taskGoal;
 				$timeline = json_encode(array());
-				$sql = "insert into TaskTimeline(id,taskID,taskName,timeline,startDate,endDate) values (NULL,'$taskID','$taskName','$timeline','$date',NULL)";
+				$sql = "insert into TaskTimeline(id,taskID,taskName,timeline,taskGoal,startDate,endDate) values (NULL,'$taskID','$taskName','$timeline','$taskGoal','$date',NULL)";
 				$query = $mysqli->query($sql);
 
 				if($query){
-					$result['success'] = 3;
+					$result['success'] = $taskGoal;
 					echo json_encode($result);
 					exit();
 				}else{
@@ -86,8 +88,8 @@
 				$taskID = $id;
 				$task = json_decode(json_encode($task),true);
 				$taskName =$task['name'];
-
-				$sql = "insert into TaskTimeline(id,taskID,taskName,timeline,startDate,endDate) values(NULL,'$taskID','$taskName','[]','$date',NULL)";
+				$taskGoal = $task['goal'];
+				$sql = "insert into TaskTimeline(id,taskID,taskName,timeline,taskGoal,startDate,endDate) values(NULL,'$taskID','$taskName','[]','$taskGoal','$date',NULL)";
 				$query = $mysqli->query($sql);
 
 				if($query){
