@@ -136,34 +136,38 @@ habyteApp.controller('authCtrl',['$scope','$sessionStorage','$location','$http',
 }]);
 
 habyteApp.controller('timelineCtrl',['$scope','$routeParams','$sessionStorage','$location','userTasks',function(scope,routeParams,session,location,ut){
+	scope.viewedTask = {};
+
 	scope.init = function(){
 		if(routeParams.userUID != session.uid){
 			location.path(session.uid + "/timeline");
 		}
-		scope.viewTask=[];
 	}
-	
-	scope.init();
 
+	scope.init();
 
 	ut.timeline(session.uid,function(data){
 		scope.timelines = data;
 		for(index in data){
-			var json = JSON.parse(data[index].timeline);
+			var json;
+			try{
+				json = JSON.parse(data[index].timeline);
+			}catch(err){
+				json = [];
+			}
+
 			var data = [];
 			for (j in json){
 				data.push(json[j]);
 			}
-			console.log(data);
 			scope.timelines[index]['timeline'] = data;
-			scope.data = data;
 		}
 	});
 
 	scope.update = function(){
-		scope.viewTask = scope.selectedTask;
-		console.log(scope.viewTask);
-		scope.$apply;
+		console.log(scope.viewedTask);
+		scope.viewedTask = scope.selectedTask;
+		console.log(scope.viewedTask);
 	}
 
 	scope.logout = function(){
@@ -285,3 +289,12 @@ habyteApp.controller('dayCtrl',['$scope','$routeParams','$sessionStorage','$loca
 	}
 
 }]);
+
+habyteApp.directive('timelineDir',function(){
+	return{
+		scope:{
+			taskName: '@'
+		},
+		template: 'Task name: {{taskName}}',
+	}
+});
