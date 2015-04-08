@@ -146,7 +146,10 @@ angular.module('habyteControllers',[])
 			if(jsonTask.timeline.length == 0){
 				scope.message = "Not enough data to display graph.";
 			}else{
-				scope.message = "";
+				scope.message = "Start Date: " + jsonTask.startDate;
+				if(jsonTask.endDate){
+					scope.message += ", End Date: " + jsonTask.endDate;
+				}
 			}
 		}
 
@@ -208,17 +211,20 @@ angular.module('habyteControllers',[])
 		};
 
 		scope.removeTask = function(name){
-			var task = scope.tasks.filter(function(entry){
-				return entry.name === name;
-			})[0];
+			var r = confirm("Are you sure you want to delete " + name);
+			if(r==true){
+				var task = scope.tasks.filter(function(entry){
+					return entry.name === name;
+				})[0];
 
-			var i = scope.tasks.indexOf(task);
+				var i = scope.tasks.indexOf(task);
 
-			ut.removeTask(session.uid,i,function(data){
-				console.log(data);
-			});
+				ut.removeTask(session.uid,i,function(data){
+					console.log(data);
+				});
 
-			scope.tasks.splice(i,1);
+				scope.tasks.splice(i,1);
+			}
 		};
 
 		scope.incrementCounter = function(name){

@@ -10,6 +10,7 @@
         echo '[]';
         exit();
     }
+    date_default_timezone_set("Europe/London");
     $date = date("Y-m-d");
     $dateNow = new DateTime($date);
 
@@ -26,7 +27,6 @@
 			$dateBefore = new DateTime($row['date']);
 
 			$diff = intval($dateNow->diff($dateBefore)->format("%a"));
-
 			$taskID=$row['id'];
 
 			if($diff===0){
