@@ -13,7 +13,7 @@
         echo '1';
         exit();
     }
-
+    date_default_timezone_set("Europe/London");
 	$sql = "select * from Tasks where userID='$userID'";
 	$query = $mysqli->query($sql);
 

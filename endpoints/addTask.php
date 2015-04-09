@@ -14,6 +14,7 @@
 		echo json_encode($result);
         exit();
     }
+    date_default_timezone_set("Europe/London");
     $date = date("Y-m-d");
 	$sql = "select * from Tasks where userID='$userID'";
 	$query = $mysqli->query($sql);

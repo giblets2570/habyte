@@ -12,7 +12,7 @@
     }
 
 	// $diff = $date2->diff($date1)->format("%a");
-
+    date_default_timezone_set("Europe/London");
 	$sql = "select * from Tasks where userID='$userID'";
 	$query = $mysqli->query($sql);
 

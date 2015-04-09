@@ -99,6 +99,8 @@ angular.module('habyteControllers',[])
 			scaleShowGridLines : true,
 			//String - Colour of the grid lines
 			scaleGridLineColor : "rgba(0,0,0,.05)",
+			//Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+      		scaleBeginAtZero : true,
 			//Number - Width of the grid lines
 			scaleGridLineWidth : 1,
 			//Boolean - Whether the line is curved between points
